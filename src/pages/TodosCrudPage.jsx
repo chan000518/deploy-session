@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +10,15 @@ export default function TodosCrudPage() {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        // get
+        const res = await axios.get("https://jsonplaceholder.typicode.com/todos",
+          {
+            params: {
+              _limit : 5
+            }
+          }
+        );
+        console.log(res)
+        setTodos(res.data);
       } catch (error) {
         console.error('GET 요청 실패:', error);
       }
@@ -21,25 +30,43 @@ export default function TodosCrudPage() {
   // POST
   const handleAdd = async () => {
     try {
-      // post
+       const res = await axios.post(`https://jsonplaceholder.typicode.com/todos`, {
+         title,
+         completed: false
+       });
+       console.log(res.data);
+       setTodos([...todos, res.data]);
+       setTitle('');
     } catch (error) {
       console.error('POST 요청 실패:', error);
     }
   };
 
   // PATCH
-  const handleToggle = async () => {
+  const handleToggle = async (id) => {
     try {
-      // patch
+      const res = await axios.patch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+         completed: true
+       });
+       setTodos(todos.map(data => {
+          return data.id === id ? { ...data, completed: true } : data;
+       }))
+       console.log(res.data)
     } catch (error) {
       console.error('PATCH 요청 실패:', error);
     }
   };
 
   // DELETE
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     try {
-      // delete
+      const res = await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+         completed: true
+       });
+       setTodos(todos.filter((data) => {
+         return data.id !== id;
+       }));
+       console.log(res.data);
     } catch (error) {
       console.error('DELETE 요청 실패:', error);
     }
@@ -80,6 +107,7 @@ export default function TodosCrudPage() {
               >
                 완료
               </button>
+              {todo.completed}
               <button
                 onClick={() => handleDelete(todo.id)}
                 className="text-red-600 underline"
