@@ -4,7 +4,6 @@ import TodosNoQueryPage from './pages/TodosNoQueryPage';
 import TodosTanStackQueryPage from './pages/TodosTanStackQueryPage';
 import TodosCrudPage from './pages/TodosCrudPage';
 import ProductsPage from './pages/ProductsPage';
-import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
           element={<TodosTanStackQueryPage />}
         />
       </Routes>
-      <Analytics />
     </BrowserRouter>
   );
 }
